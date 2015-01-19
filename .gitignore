@@ -2,3 +2,4 @@
 *.exe
 *TestRunner.c
 *.exe.*
+*assert.h

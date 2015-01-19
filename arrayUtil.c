@@ -1,7 +1,8 @@
 #include "arrayUtil.h"
 #include <stdio.h>
+#include <stdlib.h>
 
-int areEqual(arrayUtil array1,arrayUtil array2){
+int areEqual(ArrayUtil array1,ArrayUtil array2){
 	int i;
 	int *a = array1.base;
 	int *b = array2.base; 
@@ -12,4 +13,27 @@ int areEqual(arrayUtil array1,arrayUtil array2){
 			return 0;
 	}
 	return 1;
+};
+
+
+ArrayUtil create(int typeSize,int length){
+	ArrayUtil array;
+	void *base = calloc(length,typeSize);
+	array.base = base;
+	array.typeSize = typeSize;
+	array.length = length;
+ 	return array;
+};
+
+ArrayUtil resize(ArrayUtil array,int length){
+	int i,*srcArray = (int*)array.base;
+	int typeSize = sizeof(srcArray[0]);
+	int *resultBase =calloc(length,typeSize);
+	for(i=0;i<length;i++){
+		if(i<array.length)
+			resultBase[i] = srcArray[i];
+	};
+	array.base = resultBase;
+	array.length = length;
+	return array;
 };
