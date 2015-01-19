@@ -39,10 +39,8 @@ void test_ArrayUtil_a_and_ArrayUtil_b_are_will_be_equal(){
 };
 
 void test_ArrayUtil_return_the_array_that_contains_all_element_0(){
-	ArrayUtil array;
-	int *a;
-	array = create(4,5);
-	a = array.base;
+	ArrayUtil array = create(4,5);
+	int *a  = (int*)array.base;
 	assertEqual(a[0],0);
 	assertEqual(a[4],0);
 	assertEqual(array.length, 5);
@@ -51,8 +49,8 @@ void test_ArrayUtil_return_the_array_that_contains_all_element_0(){
 
 void test_ArrayUtil_returns_the_array_length_3(){
 	int array [] = {1,2,3,4,5};
-	ArrayUtil resizeArray,src;
 	int *resultArray;
+	ArrayUtil resizeArray,src;
 	src.base = array;
 	src.length = 5;
 	resizeArray = resize(src ,15);
