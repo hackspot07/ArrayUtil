@@ -1,1 +1,4 @@
-arrayUtilTestRunner.c
+*.o
+*.exe
+*TestRunner.c
+*.exe.*
