@@ -4,8 +4,8 @@
 
 int areEqual(ArrayUtil array1,ArrayUtil array2){
 	int i;
-	int *a = (int*)array1.base;
-	int *b = (int*)array2.base; 
+	char *a = array1.base;
+	char *b = array2.base; 
 	if(array1.length != array2.length)
 			return 0;
 	for(i=0;i<array1.length;i++){
@@ -18,7 +18,7 @@ int areEqual(ArrayUtil array1,ArrayUtil array2){
 
 ArrayUtil create(int typeSize,int length){
 	ArrayUtil array;
-	void *base = calloc(length,typeSize);
+	char *base = calloc(length,typeSize);
 	array.base = base;
 	array.typeSize = typeSize;
 	array.length = length;
@@ -26,7 +26,7 @@ ArrayUtil create(int typeSize,int length){
 };
 
 ArrayUtil resize(ArrayUtil array,int length){
-	int i,*srcArray = (int*)array.base;
+	int i,*srcArray = array.base;
 	int typeSize = sizeof(srcArray[0]);
 	int *resultBase =calloc(length,typeSize);
 	for(i=0;i<length;i++){
@@ -57,4 +57,15 @@ void dispose(ArrayUtil array){
 	free(array.base);
 	array.length=0;
 	array.typeSize=0;
+};
+
+void* findFirst(ArrayUtil array, MatchFunc* match, void* hint){
+	int i;
+	char* src = (char*)array.base;
+	int mLength = array.length*array.typeSize;
+	for(i=0;i<mLength;i++){
+		if(match(hint,&src[i]))
+			return &src[i];
+	};
+	return NULL;
 };

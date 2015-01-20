@@ -113,6 +113,33 @@ void test_dispose_free_the_allocated_memory(){
 	assertEqual(((int*)array.base)[0],0);
 	assertEqual(((int*)array.base)[1],0);
 	dispose(array);
-	//after dispose there wiill we no index 
+	//after dispose there will we no index 
 	// assertEqual(((int*)array.base)[1],0);
 };
+
+
+// int isEven(void* hint, void* item){
+// 	if(*(int*)item%2==0)
+// 		return 1;
+// 	return 0;
+// }
+
+// void test_findFirst_will_return_8(){
+// 	int a[]={1,3,5,7,8,9},hint=3,*result;
+// 	ArrayUtil array;
+// 	array.base = a;
+// 	array.length = 6;
+// 	array.typeSize = sizeof(int);
+// 	result = findFirst(array,isEven,&hint);
+// 	assertEqual(*result,8);
+// };
+
+// void test_findFirst_will_return_0(){
+// 	int a[]={1,3,5,7,5,9},hint=3,*result;
+// 	ArrayUtil array;
+// 	array.base = a;
+// 	array.length = 6;
+// 	array.typeSize = sizeof(int);
+// 	result = findFirst(array,isEven,&hint);
+// 	assertEqual((int)(result),(int)NULL);
+// };
