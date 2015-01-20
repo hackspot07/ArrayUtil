@@ -3,13 +3,12 @@
 #include <stdlib.h>
 
 int areEqual(ArrayUtil array1,ArrayUtil array2){
-	int i,length;
+	int i;
 	int *a = (int*)array1.base;
 	int *b = (int*)array2.base; 
-	length = (array1.length>array2.length)?array1.length:array2.length;
 	if(array1.length != array2.length)
 			return 0;
-	for(i=0;i<length;i++){
+	for(i=0;i<array1.length;i++){
 		if(a[i] != b[i])
 			return 0;
 	}
