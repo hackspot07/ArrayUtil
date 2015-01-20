@@ -39,7 +39,7 @@ void test_ArrayUtil_a_and_ArrayUtil_b_are_will_be_equal(){
 };
 
 void test_ArrayUtil_return_the_array_that_contains_all_element_0(){
-	ArrayUtil array = create(4,5);
+	ArrayUtil array = create(sizeof(int),5);
 	int *a  = (int*)array.base;
 	assertEqual(a[0],0);
 	assertEqual(a[4],0);
@@ -105,4 +105,14 @@ void test_it_return_indexof_2(){
 	src.typeSize = sizeof(char);
 	index = findIndex(src,&element);
 	assertEqual(index,2);
+};
+
+void test_dispose_free_the_allocated_memory(){
+	ArrayUtil array;
+	array = create(sizeof(int),5);
+	assertEqual(((int*)array.base)[0],0);
+	assertEqual(((int*)array.base)[1],0);
+	dispose(array);
+	//after dispose there wiill we no index 
+	// assertEqual(((int*)array.base)[1],0);
 };

@@ -51,3 +51,10 @@ int findIndex(ArrayUtil array, void* element){
 	};
 	return -1;
 };
+
+
+void dispose(ArrayUtil array){
+	free(array.base);
+	array.length=0;
+	array.typeSize=0;
+};
