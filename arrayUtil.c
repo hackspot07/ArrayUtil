@@ -8,7 +8,7 @@ int areEqual(ArrayUtil array1,ArrayUtil array2){
 	char *b = array2.base; 
 	if(array1.length != array2.length)
 			return 0;
-	for(i=0;i<array1.length;i++){
+	for(i=0;i<array1.length*array1.typeSize;i++){
 		if(a[i] != b[i])
 			return 0;
 	}
