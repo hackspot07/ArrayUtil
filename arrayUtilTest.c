@@ -73,6 +73,28 @@ void test_it_return_indexof_3(){
 	assertEqual(index,3);
 };
 
+void test_it_return_indexof_minus_1(){
+	float array[]= {4.0,6.9,7.2,8.7,6.6,5,4},index;
+	float element = 2.3;
+	ArrayUtil src;
+	src.base = array;
+	src.length = 7;
+	src.typeSize = sizeof(float);
+	index = findIndex(src,&element);
+	assertEqual(index,-1);
+};
+
+void test_it_return_indexof_5(){
+	float array[]= {4.0,6.9,7.2,8.7,6.6,5,4},index;
+	float element = 6.6;
+	ArrayUtil src;
+	src.base = array;
+	src.length = 7;
+	src.typeSize = sizeof(float);
+	index = findIndex(src,&element);
+	assertEqual(index,4);
+};
+
 void test_it_return_indexof_2(){
 	char array[]= {'a','b','c','d'};
 	char element ='c';
