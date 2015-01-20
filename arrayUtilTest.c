@@ -61,3 +61,26 @@ void test_ArrayUtil_returns_the_array_length_3(){
 	assertEqual(resultArray[14],0);
 
 };
+
+
+void test_it_return_indexof_3(){
+	int array[]= {2,6,7,8,6,5,4},index,element=8;
+	ArrayUtil src;
+	src.base = array;
+	src.length = 7;
+	src.typeSize = sizeof(int);
+	index = findIndex(src,&element);
+	assertEqual(index,3);
+};
+
+void test_it_return_indexof_2(){
+	char array[]= {'a','b','c','d'};
+	char element ='c';
+	int index;
+	ArrayUtil src;
+	src.base = array;
+	src.length = 4;
+	src.typeSize = sizeof(char);
+	index = findIndex(src,&element);
+	assertEqual(index,2);
+};

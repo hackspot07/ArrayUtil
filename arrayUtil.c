@@ -37,3 +37,16 @@ ArrayUtil resize(ArrayUtil array,int length){
 	array.length = length;
 	return array;
 };
+
+int findIndex(ArrayUtil array, void* element){
+	int index;
+	char *src = (char*)array.base;
+	char *ele = (char*)element;
+	int mLength = array.length*array.typeSize;
+		for(index=0;index<mLength;){
+			if(src[index] == *ele)
+				return index/array.typeSize;
+			index = index+array.typeSize;
+		}
+	return -1;
+};
