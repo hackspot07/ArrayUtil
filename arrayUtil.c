@@ -43,13 +43,11 @@ int findIndex(ArrayUtil array, void* element){
 	char *src = (char*)array.base;
 	char *ele = (char*)element;
 	int mLength = array.length*array.typeSize;
-	for(index=0;index<(mLength);index++){
-		if(src[index] != ele[count])
-			count=0;
+	for(index=0;index<mLength;index++){
 		if(src[index]==ele[count])
 			count++;
 		if(count==array.typeSize)
 	 		return index/array.typeSize;
-	}
+	};
 	return -1;
 };
