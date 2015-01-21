@@ -22,7 +22,11 @@ ArrayUtil create(int typeSize,int length){
 
 ArrayUtil resize(ArrayUtil array,int length){
 	int i,j=array.length*array.typeSize;
+	int newIndex = (length-array.length)*array.typeSize;
 	array.base = realloc(array.base,length*array.typeSize);
+	for (i=0;i<newIndex;i++){
+		((char*)array.base)[i+j]=0;
+	}
 	array.length = length;
 	return array;
 };
@@ -75,3 +79,14 @@ int count(ArrayUtil array, MatchFunc* match, void* hint){
 	};
 	return j;
 };
+
+// int filter(ArrayUtil array, MatchFunc* match, void* hint, void** destination, int maxItems ){
+// 	int i,length;
+// 	for(i=0;i<array.length*array.typeSize;i++){
+// 		if(match(hint,&(array.base[i]))){ 
+// 			destination[length++] = array.base[i];
+// 			*destination = realloc(*destination,sizeof(int)*length+1);
+// 		}
+// 	};
+// 	return length;
+// };

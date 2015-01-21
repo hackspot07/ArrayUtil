@@ -238,3 +238,12 @@ void test_count_will_return_1(){
 
 	assertEqual(result,1);
 };
+
+// void test_filter_will_return_the_length_of_array_3(){
+// 	int a[]={1,8,8,7,8,9},hint=3,length;
+// 	void* result = malloc(sizeof(int));
+// 	ArrayUtil array = {a, sizeof(int), 6};
+// 	length = filter(array,isEqual,&hint,result,5);
+
+// 	assertEqual(length,3);
+// };
