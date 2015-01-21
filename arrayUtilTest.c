@@ -153,7 +153,7 @@ void test_dispose_free_the_allocated_memory(){
 
 
 int isEqual(void* hint, void* item){
-	if(*(int*)item==8)
+	if(*(int*)item==8 ||*(float*)item == 9.0 || *(double*)item==8.9)
 		return 1;
 	return 0;
 }
@@ -239,11 +239,66 @@ void test_count_will_return_1(){
 	assertEqual(result,1);
 };
 
-// void test_filter_will_return_the_length_of_array_3(){
-// 	int a[]={1,8,8,7,8,9},hint=3,length;
-// 	void* result = malloc(sizeof(int));
-// 	ArrayUtil array = {a, sizeof(int), 6};
-// 	length = filter(array,isEqual,&hint,result,5);
+void test_filter_will_return_the_length_of_array_3(){
+	int a[]={1,8,8,7,8,9},hint=3,length;
+	void* result = malloc(sizeof(int));
+	ArrayUtil array = {a, sizeof(int), 6};
+	length = filter(array,isEqual,&hint,result,5);
 
-// 	assertEqual(length,3);
-// };
+	assertEqual(length,3);
+};
+
+
+void test_filter_will_return_the_array_of_8_8_8(){
+	int a[]={1,8,8,7,8,9},hint=3,length;
+	void* result;
+	ArrayUtil array = {a, sizeof(int), 6};
+	length = filter(array,isEqual,&hint,&result,5);
+
+	assertEqual(((int*)result)[0],8);
+	assertEqual(length,3);
+};
+
+
+void test_filter_will_return_the_array_of_only_two_8(){
+	int a[]={1,8,8,7,8,9},hint=3,length;
+	void* result;
+	ArrayUtil array = {a, sizeof(int), 6};
+	length = filter(array,isEqual,&hint,&result,2);
+
+	assertEqual(((int*)result)[1],8);
+	assertEqual(length,2);
+};
+
+void test_filter_will_return_the_array_of_only_two_8_point_7_in_float(){
+	float a[]={1.4,8.4,8.9,7,8,9.0},hint=3;
+	int length;
+	void* result;
+	ArrayUtil array = {a, sizeof(float), 6};
+	length = filter(array,isEqual,&hint,&result,2);
+
+	assertEqual(((float*)result)[0],9.0);
+	assertEqual(length,1);
+};
+
+void test_filter_will_return_the_array_a_a_a(){
+	char a[]={'a','a','a','b','d'},hint=3;
+	int length;
+	void* result;
+	ArrayUtil array = {a, sizeof(char), 5};
+	length = filter(array,compare,&hint,&result,5);
+
+	assertEqual(((char*)result)[1],'a');
+	assertEqual(length,3);
+};
+
+void test_filter_will_return_the_array_of_only_one_element_8_point_9_in_double(){
+	double a[]={8.4,8.4,8.9},hint=3;
+	int length;
+	void* result;
+	ArrayUtil array = {a, sizeof(double), 3};
+	length = filter(array,isEqual,&hint,&result,2);
+
+	assertEqual(((double*)result)[0],8.9);
+	assertEqual(length,1);
+};

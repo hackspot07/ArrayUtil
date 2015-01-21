@@ -1,6 +1,7 @@
 #include "arrayUtil.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 int areEqual(ArrayUtil util1,ArrayUtil util2){
 	int i;
@@ -80,13 +81,17 @@ int count(ArrayUtil array, MatchFunc* match, void* hint){
 	return j;
 };
 
-// int filter(ArrayUtil array, MatchFunc* match, void* hint, void** destination, int maxItems ){
-// 	int i,length;
-// 	for(i=0;i<array.length*array.typeSize;i++){
-// 		if(match(hint,&(array.base[i]))){ 
-// 			destination[length++] = array.base[i];
-// 			*destination = realloc(*destination,sizeof(int)*length+1);
-// 		}
-// 	};
-// 	return length;
-// };
+int filter(ArrayUtil array, MatchFunc* match, void* hint, void** destination, int maxItems ){
+	int i,length=0;
+	*destination = malloc(array.typeSize);
+	for(i=0;i<array.length*array.typeSize;i++){
+		if(match(hint,&array.base[i])){
+			memcpy(&((*destination)[length*array.typeSize]),&(array.base[i]),array.typeSize);
+			length++;
+			*destination = realloc(*destination,array.typeSize*length+1);
+		}  
+		if(maxItems==length)
+			return maxItems;
+	};
+	return length;
+};
