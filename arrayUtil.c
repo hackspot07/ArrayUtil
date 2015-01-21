@@ -22,19 +22,15 @@ ArrayUtil create(int typeSize,int length){
 
 ArrayUtil resize(ArrayUtil array,int length){
 	int i,j=array.length*array.typeSize;
-	int newIndexs = (length-array.length)*array.typeSize;
 	array.base = realloc(array.base,length*array.typeSize);
-	for(i=0;i<newIndexs;i++){
-		((char*)array.base)[i+j]=0;
-	}
 	array.length = length;
 	return array;
 };
 
 int findIndex(ArrayUtil array, void* element){
 	int index,count=0;
-	char *src = (char*)array.base;
-	char *ele = (char*)element;
+	char *src = array.base;
+	char *ele = element;
 	int mLength = array.length*array.typeSize;
 	for(index=0;index<mLength;index++){
 		if(src[index]==ele[count])
@@ -52,13 +48,11 @@ void dispose(ArrayUtil array){
 	array.typeSize=0;
 };
 
-// void* findFirst(ArrayUtil array, MatchFunc* match, void* hint){
-// 	int i;
-// 	char* src = (char*)array.base;
-// 	int mLength = array.length*array.typeSize;
-// 	for(i=0;i<mLength;i++){
-// 		if(match(hint,&src[i]))
-// 			return &src[i];
-// 	};
-// 	return NULL;
-// };
+void* findFirst(ArrayUtil array, MatchFunc* match, void* hint){
+	int i;
+	for(i=0;i<array.length;i++){
+		if(match(hint,&(array.base[i])))
+			return &(array.base[i]);
+	};
+	return NULL;
+};

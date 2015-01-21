@@ -152,28 +152,27 @@ void test_dispose_free_the_allocated_memory(){
 };
 
 
-// int isEven(void* hint, void* item){
-// 	if(*(int*)item%2==0)
-// 		return 1;
-// 	return 0;
-// }
+int isEqual(void* hint, void* item){
+	int value = 8;
+	if(*(int*)item==8)
+		return 1;
+	return 0;
+}
 
-// void test_findFirst_will_return_8(){
-// 	int a[]={1,3,5,7,8,9},hint=3,*result;
-// 	ArrayUtil array;
-// 	array.base = a;
-// 	array.length = 6;
-// 	array.typeSize = sizeof(int);
-// 	result = findFirst(array,isEven,&hint);
-// 	assertEqual(*result,8);
-// };
+void test_findFirst_will_return_8(){
+	int a[]={8,3,5,7,8,9},hint=3;
+	ArrayUtil array = {a, sizeof(int), 6};
+	int* result = findFirst(array,isEqual,&hint);
 
-// void test_findFirst_will_return_0(){
-// 	int a[]={1,3,5,7,5,9},hint=3,*result;
-// 	ArrayUtil array;
-// 	array.base = a;
-// 	array.length = 6;
-// 	array.typeSize = sizeof(int);
-// 	result = findFirst(array,isEven,&hint);
-// 	assertEqual((int)(result),(int)NULL);
-// };
+	assertEqual((int)*result,8);
+};
+
+void test_findFirst_will_return_NULL(){
+	int a[]={1,3,5,7,5,9},hint=3,*result;
+	ArrayUtil array = {a, sizeof(int), 6};
+	array.typeSize = sizeof(int);
+	result = findFirst(array,isEqual,&hint);\
+	
+	assertEqual((int)(result),(int)NULL);
+};
+
