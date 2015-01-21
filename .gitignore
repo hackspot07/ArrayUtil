@@ -3,3 +3,4 @@
 *TestRunner.c
 *.exe.*
 *assert.h
+*_h.c

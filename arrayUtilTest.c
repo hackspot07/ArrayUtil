@@ -1,7 +1,8 @@
 #define String char*
 #include "expr_assert.h"
 #include "arrayUtil.h"
-#include<stdlib.h>
+#include <stdlib.h>
+#include <string.h>
 
 void test_ArrayUtil_a_and_ArrayUtil_b_are_will_be_equal(){
 	int a [] = {1,2};
@@ -166,7 +167,13 @@ void test_findFirst_will_return_8(){
 	assertEqual((int)*result,8);
 };
 
-
+int stringCompare(void *hint, void* item){
+	String str ="hello";
+	String getItem = *(String*)item;
+	if(getItem==str)
+		return 1;
+	return 0;
+}
 
 void test_findFirst_will_return_NULL(){
 	int a[]={1,3,5,7,5,9},hint=3,*result;
@@ -188,6 +195,18 @@ void test_findfirst_will_return_a(){
 	result = findFirst(array,compare,&hint);
 
 	assertEqual((char)*result,'a');
+};
+
+void test_findfirst_will_return_hello(){
+	ArrayUtil array = create(sizeof(String),2);
+	String expected;
+	int hint=3,*result;
+	((char**)array.base)[0]="hello";
+	((char**)array.base)[1]="gello";
+	result = findFirst(array,stringCompare,&hint);
+	expected = ((String)*result);
+
+	assertEqual(strcmp(expected,"hello"),0);
 };
 
 void test_findLast_will_return_a(){
@@ -246,6 +265,7 @@ void test_filter_will_return_the_length_of_array_3(){
 	length = filter(array,isEqual,&hint,result,5);
 
 	assertEqual(length,3);
+	free(result);
 };
 
 
@@ -257,6 +277,7 @@ void test_filter_will_return_the_array_of_8_8_8(){
 
 	assertEqual(((int*)result)[0],8);
 	assertEqual(length,3);
+	free(result);
 };
 
 
@@ -268,6 +289,7 @@ void test_filter_will_return_the_array_of_only_two_8(){
 
 	assertEqual(((int*)result)[1],8);
 	assertEqual(length,2);
+	free(result);
 };
 
 void test_filter_will_return_the_array_of_only_two_8_point_7_in_float(){
@@ -279,6 +301,7 @@ void test_filter_will_return_the_array_of_only_two_8_point_7_in_float(){
 
 	assertEqual(((float*)result)[0],9.0);
 	assertEqual(length,1);
+	free(result);
 };
 
 void test_filter_will_return_the_array_a_a_a(){
@@ -290,10 +313,11 @@ void test_filter_will_return_the_array_a_a_a(){
 
 	assertEqual(((char*)result)[1],'a');
 	assertEqual(length,3);
+	free(result);
 };
 
 void test_filter_will_return_the_array_of_only_one_element_8_point_9_in_double(){
-	double a[]={8.4,8.4,8.9},hint=3;
+	double a[]={8.4,8.4,8.9},hint=3.9;
 	int length;
 	void* result;
 	ArrayUtil array = {a, sizeof(double), 3};
@@ -301,4 +325,33 @@ void test_filter_will_return_the_array_of_only_one_element_8_point_9_in_double()
 
 	assertEqual(((double*)result)[0],8.9);
 	assertEqual(length,1);
+	free(result);
 };
+
+void test_filter_will_return_the_array_string_contain_hello(){
+	int length,hint=9;
+	void* result,*expected;
+	ArrayUtil array = create(sizeof(String),2);
+	((char**)array.base)[0]="hello";
+	((char**)array.base)[1]="gello";
+	length = filter(array,stringCompare,&hint,&result,2);
+	expected = ((String*)result)[0];
+	assertEqual(length,1);
+
+	assertEqual(strcmp(expected,"hello"),0);
+};
+
+
+
+
+// void multiplyBy2(void* hint, void* sourceItem, void* destinationItem){
+
+// };
+
+// void test_map_will_return_after_multiplyby_2_in_each_element(){
+// 	int a[]={1,8,8,7,8,9},hint=3,actual[] = {2,16,16,14,16,18},expected;
+// 	ArrayUtil src = {a, sizeof(int), 6},result; 
+// 	map(src,result,multiplyBy2,&hint);
+// 	expected = ((int[])result.base);
+// 	assert(areEqual(expected,actual));
+// };

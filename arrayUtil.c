@@ -95,3 +95,6 @@ int filter(ArrayUtil array, MatchFunc* match, void* hint, void** destination, in
 	};
 	return length;
 };
+
+void map(ArrayUtil source, ArrayUtil destination, ConvertFunc* convert, void* hint){
+};
