@@ -56,3 +56,12 @@ void* findFirst(ArrayUtil array, MatchFunc* match, void* hint){
 	};
 	return NULL;
 };
+
+void* findLast(ArrayUtil array, MatchFunc* match, void* hint){
+	int i;
+	for(i=array.length;i>=0;i--){
+		if(match(hint,&(array.base[i])))
+			return &(array.base[i]);
+	};
+	return NULL;
+};

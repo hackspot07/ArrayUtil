@@ -172,7 +172,24 @@ void test_findFirst_will_return_NULL(){
 	ArrayUtil array = {a, sizeof(int), 6};
 	array.typeSize = sizeof(int);
 	result = findFirst(array,isEqual,&hint);\
-	
+
 	assertEqual((int)(result),(int)NULL);
 };
 
+void test_findLast_will_return_last_8(){
+	int a[]={8,3,5,7,8,9},hint=3;
+	ArrayUtil array = {a, sizeof(int), 6};
+	int* result = findLast(array,isEqual,&hint);
+
+	assertEqual((int)*result,8);
+};
+
+
+void test_findLast_will_return_NULL(){
+	int a[]={1,3,5,7,5,9},hint=3,*result;
+	ArrayUtil array = {a, sizeof(int), 6};
+	array.typeSize = sizeof(int);
+	result = findFirst(array,isEqual,&hint);
+
+	assertEqual((int)(result),(int)NULL);
+};
