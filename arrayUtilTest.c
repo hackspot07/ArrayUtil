@@ -153,7 +153,6 @@ void test_dispose_free_the_allocated_memory(){
 
 
 int isEqual(void* hint, void* item){
-	int value = 8;
 	if(*(int*)item==8)
 		return 1;
 	return 0;
@@ -167,13 +166,39 @@ void test_findFirst_will_return_8(){
 	assertEqual((int)*result,8);
 };
 
+
+
 void test_findFirst_will_return_NULL(){
 	int a[]={1,3,5,7,5,9},hint=3,*result;
 	ArrayUtil array = {a, sizeof(int), 6};
 	array.typeSize = sizeof(int);
-	result = findFirst(array,isEqual,&hint);\
+	result = findFirst(array,isEqual,&hint);
 
 	assertEqual((int)(result),(int)NULL);
+};
+
+int compare(void *hint,void* item){
+	if(*(char*)item=='a')
+		return 1;
+	return 0;
+};
+
+void test_findfirst_will_return_a(){
+	char a[]={'b','a','b','b'},hint=3,*result;
+	ArrayUtil array = {a, sizeof(char), 3};
+	array.typeSize = sizeof(char);
+	result = findFirst(array,compare,&hint);
+
+	assertEqual((char)*result,'a');
+};
+
+void test_findLast_will_return_a(){
+	char a[]={'a','b'},hint=3,*result;
+	ArrayUtil array = {a, sizeof(char), 2};
+	array.typeSize = sizeof(char);
+	result = findFirst(array,compare,&hint);
+
+	assertEqual((char)*result,'a');
 };
 
 void test_findLast_will_return_last_8(){
