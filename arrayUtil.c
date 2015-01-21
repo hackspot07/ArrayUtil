@@ -2,38 +2,31 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int areEqual(ArrayUtil array1,ArrayUtil array2){
+int areEqual(ArrayUtil util1,ArrayUtil util2){
 	int i;
-	char *a = array1.base;
-	char *b = array2.base; 
-	if(array1.length != array2.length)
+	char *a = util1.base;
+	char *b = util2.base; 
+	if(util1.length != util2.length)
 			return 0;
-	for(i=0;i<array1.length*array1.typeSize;i++){
+	for(i=0;i<util1.length*util1.typeSize;i++)
 		if(a[i] != b[i])
 			return 0;
-	}
 	return 1;
 };
 
 
 ArrayUtil create(int typeSize,int length){
-	ArrayUtil array;
-	char *base = calloc(length,typeSize);
-	array.base = base;
-	array.typeSize = typeSize;
-	array.length = length;
+	ArrayUtil array = {calloc(length,typeSize),typeSize,length};
  	return array;
 };
 
 ArrayUtil resize(ArrayUtil array,int length){
-	int i,*srcArray = array.base;
-	int typeSize = sizeof(srcArray[0]);
-	int *resultBase =calloc(length,typeSize);
-	for(i=0;i<length;i++){
-		if(i<array.length)
-			resultBase[i] = srcArray[i];
-	};
-	array.base = resultBase;
+	int i,j=array.length*array.typeSize;
+	int newIndexs = (length-array.length)*array.typeSize;
+	array.base = realloc(array.base,length*array.typeSize);
+	for(i=0;i<newIndexs;i++){
+		((char*)array.base)[i+j]=0;
+	}
 	array.length = length;
 	return array;
 };
@@ -59,13 +52,13 @@ void dispose(ArrayUtil array){
 	array.typeSize=0;
 };
 
-void* findFirst(ArrayUtil array, MatchFunc* match, void* hint){
-	int i;
-	char* src = (char*)array.base;
-	int mLength = array.length*array.typeSize;
-	for(i=0;i<mLength;i++){
-		if(match(hint,&src[i]))
-			return &src[i];
-	};
-	return NULL;
-};
+// void* findFirst(ArrayUtil array, MatchFunc* match, void* hint){
+// 	int i;
+// 	char* src = (char*)array.base;
+// 	int mLength = array.length*array.typeSize;
+// 	for(i=0;i<mLength;i++){
+// 		if(match(hint,&src[i]))
+// 			return &src[i];
+// 	};
+// 	return NULL;
+// };
