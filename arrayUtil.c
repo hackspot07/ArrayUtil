@@ -50,7 +50,7 @@ void dispose(ArrayUtil array){
 
 void* findFirst(ArrayUtil array, MatchFunc* match, void* hint){
 	int i;
-	for(i=0;i<array.length;i++){
+	for(i=0;i<array.length*array.typeSize;i++){
 		if(match(hint,&(array.base[i])))
 			return &(array.base[i]);
 	};
@@ -59,9 +59,19 @@ void* findFirst(ArrayUtil array, MatchFunc* match, void* hint){
 
 void* findLast(ArrayUtil array, MatchFunc* match, void* hint){
 	int i;
-	for(i=array.length;i>=0;i--){
+	for(i=array.length*array.typeSize;i>=0;i--){
 		if(match(hint,&(array.base[i])))
 			return &(array.base[i]);
 	};
 	return NULL;
+};
+
+int count(ArrayUtil array, MatchFunc* match, void* hint){
+	int i,j=0;
+	for(i=0;i<array.length*array.typeSize;i++){
+		if(match(hint,&(array.base[i]))){ 
+			j++;
+		}
+	};
+	return j;
 };

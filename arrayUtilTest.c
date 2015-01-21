@@ -215,10 +215,26 @@ void test_findLast_will_return_NULL(){
 	assertEqual((int)(result),(int)NULL);
 };
 
-// void test_count_will_return_3(){
-// 	int a[]={1,8,8,7,8,9},hint=3,result;
-// 	ArrayUtil array = {a, sizeof(int), 6};
-// 	result = count(array,isEqual,&hint);
+void test_count_will_return_3(){
+	int a[]={1,8,8,7,8,9},hint=3,result;
+	ArrayUtil array = {a, sizeof(int), 6};
+	result = count(array,isEqual,&hint);
 
-// 	assertEqual(result,3);
-// };
+	assertEqual(result,3);
+};
+
+void test_count_will_return_0(){
+	int a[]={1,6,6,7,7,9},hint=3,result;
+	ArrayUtil array = {a, sizeof(int), 6};
+	result = count(array,isEqual,&hint);
+
+	assertEqual(result,0);
+};
+
+void test_count_will_return_1(){
+	char a[]={'a','b'},hint=3,result;
+	ArrayUtil array = {a, sizeof(char), 2};
+	result = count(array,compare,&hint);
+
+	assertEqual(result,1);
+};
