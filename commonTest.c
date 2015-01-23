@@ -778,3 +778,79 @@ void test_filter_returns_0_when_there_are_no_enven_no_in_existing_array(){
  	free(filtered);
 }
 
+void test_resize_add_0_to_the_new_places_created_in_float_array(){
+	float array[] = {1.1,2.2,3.2}, arr[] = {1.1,2.2,3.2,0.0,0.0};
+	ArrayUtil array2, util1 = {array, FLOAT_SIZE, 3};
+	ArrayUtil expected = {arr, FLOAT_SIZE ,5};
+	array2 =  resize(util1,5);
+	assert(areEqual(array2 , expected));
+}
+void test_resize_returns_INT_array_within_structure_with_new_allocated_space(){
+	ArrayUtil resizedArray;
+	util = (ArrayUtil){(int []){1,2,3,4},sizeof(int),4};
+	resizedArray = resize(util,6);
+
+	expectedUtil = (ArrayUtil){(int []){1,2,3,4,0,0},sizeof(int),6}; 
+
+	assert(areEqual(expectedUtil, resizedArray));
+	dispose(resizedArray);
+};
+
+void test_resize_add_0_to_the_new_places_created_in_char_array(){
+	char *array= "abc";
+	char arr[] = {'a','b','c',0,0};
+	ArrayUtil array2, util1 = {array, CHAR_SIZE, 3};
+	ArrayUtil expected = {arr, CHAR_SIZE ,5};
+	array2 =  resize(util1,5);
+	assert(areEqual(array2 , expected));
+}
+
+void test_resize_add_0_to_the_new_places_created_in_double_array(){
+	double array[] = {1,2,3}, arr[] = {1,2,3,0,0};
+	ArrayUtil array2, util1 = {array, DOUBLE_SIZE, 3};
+	ArrayUtil expected = {arr, DOUBLE_SIZE ,5};
+	array2 =  resize(util1,5);
+	
+	assert(areEqual(array2 , expected));
+}
+
+void test_resize_returns_CHAR_array_within_structure_with_new_allocated_space(){
+	ArrayUtil resizedArray;
+	util = (ArrayUtil){(char []){'a','e','i','o'},sizeof(char),4};
+	resizedArray = resize(util,6);
+	expectedUtil = (ArrayUtil){(char []){'a','e','i','o',0,0},sizeof(char),6};
+	assertEqual(areEqual(expectedUtil, resizedArray),1);
+	dispose(resizedArray);
+}
+void test_resize_returns_CHAR_array_within_structure_with_new_allocated_space_less_than_previous(){
+	ArrayUtil resizedArray;
+	util = (ArrayUtil){(char []){'a','e','i','o','u'},sizeof(char),5};
+	resizedArray = resize(util,2);
+	expectedUtil = (ArrayUtil){(char []){'a','e'},sizeof(char),2};
+	assertEqual(areEqual(expectedUtil, resizedArray),1);
+	dispose(resizedArray);
+}
+void test_resize_returns_DOUBLE_array_within_structure_with_new_allocated_space(){
+	ArrayUtil resizedArray;
+	util = (ArrayUtil){(double []){1.0,2.11111,3.123,4.89},sizeof(double),4};
+	resizedArray = resize(util,6);
+	expectedUtil = (ArrayUtil){(double []){1.0,2.11111,3.123,4.89,0,0},sizeof(double),6};
+	assertEqual(areEqual(expectedUtil, resizedArray),1);
+	dispose(resizedArray);
+}
+void test_resize_returns_DOUBLE_array_within_structure_with_new_allocated_space_less_than_previous(){
+	ArrayUtil resizedArray;
+	util = (ArrayUtil){(double []){1.0,2.11111,3.123,4.89},sizeof(double),4};
+	resizedArray = resize(util,2);
+	expectedUtil = (ArrayUtil){(double []){1.0,2.11111},sizeof(double),2};
+	assertEqual(areEqual(expectedUtil, resizedArray),1);
+	dispose(resizedArray);
+}
+void test_resize_returns_FLOAT_array_within_structure_with_new_allocated_space(){
+	ArrayUtil resizedArray;
+	util = (ArrayUtil){(float []){1.0,2.11111,3.123,4.89},sizeof(float),4};
+	resizedArray = resize(util,6);
+	expectedUtil = (ArrayUtil){(float []){1.0,2.11111,3.123,4.89,0,0},sizeof(float),6};
+	assertEqual(areEqual(expectedUtil, resizedArray),1);
+	dispose(resizedArray);
+}

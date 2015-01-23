@@ -1,4 +1,6 @@
 #define String char*
+#define SIZEOF_CHAR sizeof(char)
+#define SIZEOF_DOUBLE sizeof(double)
 #include "expr_assert.h"
 #include "arrayUtil.h"
 #include <stdio.h>
@@ -90,6 +92,35 @@ void test_ArrayUtil_returns_the_array_length_3(){
 	assertEqual(resultArray.length, 2);
 };
 
+void test_resize_returns_INT_array_within_structure_with_new_allocated_space(){
+	ArrayUtil resizedArray;
+	util = (ArrayUtil){(int []){1,2,3,4},sizeof(int),4};
+	resizedArray = resize(util,6);
+
+	expectedUtil = (ArrayUtil){(int []){1,2,3,4,0,0},sizeof(int),6}; 
+
+	assert(areEqual(expectedUtil, resizedArray));
+	dispose(resizedArray);
+};
+
+void test_resize_add_0_to_the_new_places_created_in_char_array(){
+	char *array= "abc";
+	char arr[] = {'a','b','c',0,0};
+	ArrayUtil array2, util1 = {array, SIZEOF_CHAR, 3};
+	ArrayUtil expected = {arr, SIZEOF_CHAR ,5};
+	array2 =  resize(util1,5);
+	assert(areEqual(array2 , expected));
+}
+
+void test_resize_add_0_to_the_new_places_created_in_double_array(){
+	double array[] = {1,2,3}, arr[] = {1,2,3,0,0};
+	ArrayUtil array2, util1 = {array, SIZEOF_DOUBLE, 3};
+	ArrayUtil expected = {arr, SIZEOF_DOUBLE ,5};
+	array2 =  resize(util1,5);
+	
+	assert(areEqual(array2 , expected));
+}
+
 void test_ArrayUtil_returns_the_array_which_last_value_will_be_2(){
 	ArrayUtil array = create(sizeof(float),5);
 	ArrayUtil resultArray;
@@ -99,10 +130,10 @@ void test_ArrayUtil_returns_the_array_which_last_value_will_be_2(){
 };
 
 void test_ArrayUtil_add_0_in_characterArray(){
-	ArrayUtil array = create(sizeof(char),1);
+	ArrayUtil array = create(sizeof(char),2);
 	ArrayUtil resultArray;
-	resultArray = resize(array,2);
 	((char*)array.base)[1] = 'a';
+	resultArray = resize(array,2);
 	assertEqual(((char*)resultArray.base)[1], 97);
 };
 

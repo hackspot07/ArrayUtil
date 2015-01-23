@@ -23,12 +23,12 @@ ArrayUtil create(int typeSize,int length){
 };
 
 ArrayUtil resize(ArrayUtil array,int length){
-	int i,j=array.length*array.typeSize;
-	int newIndex = (length-array.length)*array.typeSize;
-	array.base = realloc(array.base,length*array.typeSize);
-	for (i=0;i<newIndex;i++){
-		((char*)array.base)[i+j]=0;
-	}
+	int i,copyLength;
+	void *newArray;
+	copyLength = (length<=array.length?length:array.length)*array.typeSize;
+	newArray = calloc(length,length*array.typeSize); 
+	memcpy(newArray,array.base,copyLength);
+	array.base = newArray;
 	array.length = length;
 	return array;
 };
