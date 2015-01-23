@@ -1,17 +1,20 @@
 typedef char*  String;
-#define SIZEOF_INT sizeof(int)
 #define INT_SIZE sizeof(int)
 #define CHAR_SIZE sizeof(char)
 #define FLOAT_SIZE sizeof(float)
 #define DOUBLE_SIZE sizeof(double)
+
 #include "expr_assert.h"
 #include "arrayUtil.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+ArrayUtil util1,util2;
 ArrayUtil util, resultUtil, expectedUtil;
 int sample[] = {1,2,3,4,5};
+
+
 
 void increment(void* hint, void* sourceItem, void* destinationItem){
 	int *hintPtr = (int*)hint;
@@ -127,8 +130,8 @@ void test_map_gives_A_B_C_D_E_for_a_b_c_d_e_for_character_array(){
 
 // void test_resize_add_0_to_the_new_places_created_in_integer_array(){
 // 	int array[] = {1,2,3}, arr[] = {1,2,3,0,0};
-// 	ArrayUtil array2, util1 = {array, SIZEOF_INT, 3};
-// 	ArrayUtil expected = {arr, SIZEOF_INT ,5};
+// 	ArrayUtil array2, util1 = {array, INT_SIZE, 3};
+// 	ArrayUtil expected = {arr, INT_SIZE ,5};
 // 	array2 =  resize(util1,5);
 // 	assert(areEqual(array2 , expected));
 // };
@@ -460,7 +463,7 @@ void test_to_create_int_with_array_diffferent_typeSize_initializes_with_0(){
 void test_to_change_the_length_of_int_array_to_greater_length(){
 	int newLength = 5,*num;
 	int number[] = {1,2,3,0,0};
-	ArrayUtil a1 = create(SIZEOF_INT,3);
+	ArrayUtil a1 = create(INT_SIZE,3);
 	ArrayUtil a3;
 	ArrayUtil expected = {number,sizeof(int), 5};
 	num = a1.base;
@@ -472,7 +475,7 @@ void test_to_change_the_length_of_int_array_to_greater_length(){
 void test_to_change_the_length_of_array_to_small_array_length(){
 	int newLength = 3,*num;
 	int number[] = {1,2,3};
-	ArrayUtil a1 = create(SIZEOF_INT,5);
+	ArrayUtil a1 = create(INT_SIZE,5);
 	ArrayUtil a3;
 	ArrayUtil expected = {number,sizeof(int), 3};
 	num = a1.base;
@@ -539,3 +542,239 @@ void test_map_should_map_source_to_destination_using_the_provided_convert_functi
 	assert(areEqual(expectedUtil, resultUtil));
 	dispose(resultUtil);
 }
+
+void test_resize_should_grow_length_of_array_and_set_them_to_zero_when_new_size_is_more(){
+	ArrayUtil a = create(4,2);
+	int i;
+	a = resize(a,5);
+	assert(a.length == 5);
+	for (i = 0; i < 20; ++i)
+	{
+		assert(((char*)a.base)[i] == 0);
+	}
+	dispose(a);
+}
+
+void test_resize_should_not_change_length_of_array_when_new_size_is_same_as_old_size(){
+	ArrayUtil a = create(1,5);
+	int i;
+	a = resize(a,5);
+	assert(a.length == 5);
+	dispose(a);
+};
+
+
+
+void test_areEqual_returns_0_if_typeSize_of_two_arrays_are_not_equal(){
+    int array1[] = {1,2,3,4};
+    char array2[] = {'m','a','h','e'};
+    ArrayUtil util1 = {array1,sizeof(int),4};
+    ArrayUtil util2 = {array2,sizeof(char),4};
+    assertEqual(areEqual(util1, util2), 0);
+}
+
+void test_array_util_areEqual_returns_0_if_both_array_are_not_equal_in_length_and_elements(){
+	int a[]={0,3,8,5,2,3,4,5}, b[]={1,5,2,3,7};
+	ArrayUtil a_array = {a,sizeof(int),8};
+	ArrayUtil b_array = {b,sizeof(int),5};
+	assertEqual(areEqual(a_array, b_array),0);
+}
+void test_create_allocates_space_for_DOUBLE_array_and_assigns_zero_to_all_bytes(){
+	double doubleArray[] = {0,0,0,0};
+	expectedUtil = (ArrayUtil){doubleArray,sizeof(double),4};
+	util = create(sizeof(double),4);
+	assertEqual(areEqual(expectedUtil,util),1);
+	dispose(util);
+}
+void test_create_allocates_space_for_Integer_array_and_assigns_zero_to_all_bytes(){
+	int intArray[] = {0,0,0,0};
+	expectedUtil = (ArrayUtil){intArray,sizeof(int),4};
+	util = create(sizeof(int),4);
+	assertEqual(areEqual(expectedUtil,util),1);
+	dispose(util);
+}
+
+void test_findIndex_retruns_the_index_of_an_element_in_an_string_array(){
+    char array[]= {"heloo"};
+    char element ='o';
+    ArrayUtil util = {array,sizeof(char),4};
+    assertEqual(findIndex(util,&element),3);
+};
+void test_for_the_ArrayUtil_for_charecter_and_int_are_not_equal(){
+    char first_array[]={'c','d','e','f'};
+    int second_array[]={2,5,8,4};
+    ArrayUtil array1 = {first_array,sizeof(char),4};
+    ArrayUtil array2 = {second_array,sizeof(int),4};
+	assertEqual(areEqual(array1, array2),0);
+};
+void test_resize_an_existing_array_to_resize_decrease_its_length(){
+    int *resArray;
+    ArrayUtil array,resizeArray;
+    array = create(sizeof(int),5);
+    ((int*)array.base)[0]=90;
+    ((int*)array.base)[1]=40;
+    ((int*)array.base)[2]=550;
+    ((int*)array.base)[3]=550;
+    ((int*)array.base)[4]=40;
+    resizeArray=resize(array,4);
+    resArray = resizeArray.base;
+    assertEqual(resArray[2],550);
+    assertEqual(areEqual(resizeArray,array),0);
+};
+
+
+void test_resize_an_existing_array_to_resize_increase_its_length(){
+    ArrayUtil array = create(sizeof(int),3),resultArray;
+    ((int*)array.base)[0]=90;
+    ((int*)array.base)[1]=40;
+    ((int*)array.base)[2]=550;
+    resultArray = resize(array,5);
+    assertEqual(((int *)resultArray.base)[0],90);
+    assertEqual(((int *)resultArray.base)[1],40);
+    assertEqual(((int *)resultArray.base)[2],550);
+    assertEqual(((int *)resultArray.base)[3],0);
+    assertEqual(((int *)resultArray.base)[4],0);
+};
+
+int isLessThanTheHints(void* hint,void* element){
+    return (*(float*)element) < (*(float*)hint);
+}
+
+void test_for_findLast_gives_the_last_element_of_less_than_float_value_an_array(){
+    float hint = 6.3;
+    float *result;
+    MatchFunc *match = &isLessThanTheHints;
+    ArrayUtil util = {(float[]){2.3,4.5,6.3,4.5,6.0},sizeof(float),5};
+    result = findFirst(util,match,&hint);
+    assertEqual(*result,2.3);
+};
+
+void multiplyBy(void* hint, void* sourceItem, void* destinationItem){
+    *(int*)destinationItem = *(int*)sourceItem * *(int*)(hint);
+}
+
+void test_map_converts_each_element_source_array_and_put_it_to_destination_array(){
+    int hint =10;
+    ArrayUtil expected={(int[]){10,20,30,40,50},sizeof(int),5};
+    util1=(ArrayUtil){(int[]){1,2,3,4,5},sizeof(int),5};
+    util2 =create(sizeof(int),5);
+    
+    map(util1,util2,multiplyBy,&hint);
+    assert(areEqual(expected, util2));
+}
+
+void test_create_Structures_with_all_fields_NULL(){
+    student temp = {0,0.0};
+    student Student[1] = {temp};
+    ArrayUtil expected = {Student,sizeof(student),1};
+   util1 = create(sizeof(student),1);    
+    assert(areEqual(expected,util1));
+};
+
+void test_Create_creates_new_array_of_float_containing_all_elements_0 (){
+	ArrayUtil expectedUtil = {(int[]){0,0},FLOAT_SIZE,2};
+	assertEqual(areEqual(expectedUtil, create(FLOAT_SIZE, 2)), 1);
+}
+void test_Create_creates_new_charArray_containing_all_elements_0_and_gives_0_for_different_lengths (){
+	ArrayUtil expectedUtil = {(char[]){0,0,0},CHAR_SIZE,3};
+	assertEqual(areEqual(expectedUtil, create(CHAR_SIZE, 2)), 0);
+}
+void test_Create_creates_new_doubleArray_containing_all_elements_0_and_gives_0_for_different_lengths (){
+	ArrayUtil expectedUtil = {(double[]){0,0},DOUBLE_SIZE,2};
+	assertEqual(areEqual(expectedUtil, create(DOUBLE_SIZE, 3)), 0);
+}
+void test_Create_creates_new_intArray_containing_all_elements_0_and_gives_0_for_different_lengths (){
+	ArrayUtil expectedUtil = {(int[]){0,0,0},INT_SIZE,3};
+	assertEqual(areEqual(expectedUtil, create(INT_SIZE, 2)), 0);
+}
+
+void test_Create_creates_new_floatArray_containing_all_elements_0_and_gives_0_for_different_lengths (){
+	ArrayUtil expectedUtil = {(float[]){0,0},FLOAT_SIZE,2};
+	assertEqual(areEqual(expectedUtil, create(FLOAT_SIZE, 3)), 0);
+}
+
+int isGreaterThanHint (void* hint, void* element) {
+	return (*((float*)element) > *((float*)hint)) ? 1 : 0;
+}
+
+void test_filter_filters_the_util_intArray_which_matches_the_criteria (){
+	int hint = 4;
+	MatchFunc *match = &isGreaterThanHint;
+	ArrayUtil util = {(int[]){7,2,6,3,8,9},INT_SIZE,6};
+	int *destination;
+	destination = malloc(INT_SIZE*4);
+	assertEqual(filter(util, match, (void*)&hint, (void*)&destination, 4),4);
+	assertEqual(destination[0], 7);
+	assertEqual(destination[1], 6);
+	assertEqual(destination[2], 8);
+	assertEqual(destination[3], 9);
+};
+
+
+void test_findFirst_gives_occurence_of_first_element_in_floatArray_greaterThan5 (){
+	float hint = 5.1;
+	float *result;
+	MatchFunc *match = &isGreaterThanHint;
+	ArrayUtil util = {(float[]){3.1,2.4,1.6,3.7,8.3,0.1},FLOAT_SIZE,6};
+	result = (float*)findFirst(util,match,(void*)&hint);
+	assertEqual(*result,(float)8.3);
+}
+void test_findIndex_returns_4_for_float_array_if_search_element_is_at_4th_location (){
+	float element = 7.8;
+	ArrayUtil util = {(float[]){4.2,2.9,1.4,3.1,7.8,8.7},FLOAT_SIZE,6};
+	assertEqual(findIndex(util, &element),4);
+}
+void test_findLast_gives_occurence_of_last_element_in_floatArray_greaterThan5 (){
+	float hint = 5.1;
+	float *result;
+	MatchFunc *match = &isGreaterThanHint;
+	ArrayUtil util = {(float[]){7.1,2.4,1.6,3.7,8.3,0.1},FLOAT_SIZE,6};
+	result = (float*)findLast(util,match,(void*)&hint);
+	assertEqual(*result,(float)8.3);
+}
+
+void test_filter_filters_the_util_floatArray_which_matches_the_criteria (){
+	float hint = 5.1;
+	MatchFunc *match = &isGreaterThanHint;
+	ArrayUtil util = {(float[]){7.1,2.4,1.6,3.7,8.3,0.1},FLOAT_SIZE,6};
+	float *destination;
+	destination = malloc(FLOAT_SIZE*2);
+	assertEqual(filter(util, match, (void*)&hint, (void*)&destination, 4),2);
+	assertEqual(destination[0], (float)7.1);
+	assertEqual(destination[1], (float)8.3);
+};
+
+void test_findIndex_will_return_the_minus_1_if_array_element_is_not_present(){
+	int array[]={1,2,3,4,5};
+	int x=7;
+	ArrayUtil arr={array,sizeof(int),5};
+	assertEqual(findIndex(arr,&x),-1);
+}
+
+void test_areEqual_returns_0_when_length_is_equal_but_typeSize_is_not_equal(){
+	int array1[]={1,2,3,4,5};
+	char array2[]={'a','b','c','d','\0'};
+	ArrayUtil u1={array1,INT_SIZE,5};
+	ArrayUtil u2={array2,CHAR_SIZE,5};
+	assertEqual(areEqual(u1,u2), 0);
+}
+
+void test_filter_fills_filtered_array_with_even_numbers_of_existing_array_and_returns_count(){
+	int array[]={1,2,3,4,5,6,7,8};
+	int newArray[]={2,4,6,8};
+	ArrayUtil util={array,INT_SIZE,8};
+	int *filtered=(int *)malloc(INT_SIZE*5);
+	int counter=filter(util,isEven,0,(void**)&filtered,5);
+ 	assertEqual(counter,4);
+ 	free(filtered);
+}
+
+void test_filter_returns_0_when_there_are_no_enven_no_in_existing_array(){
+	int array[]={1,3,5,7};
+	ArrayUtil util={array,INT_SIZE,4};
+	int *filtered=(int *)malloc(INT_SIZE*2);
+	int counter=filter(util,isEven,0,(void**)&filtered,2);
+ 	assertEqual(counter,0);
+ 	free(filtered);
+}
+

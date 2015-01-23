@@ -5,6 +5,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+ArrayUtil util, resultUtil, expectedUtil;
+int sample[] = {1,2,3,4,5};
+
+void increment(void* hint, void* sourceItem, void* destinationItem){
+
+	*(int*)destinationItem = *(int*)hint + *(int*)sourceItem;
+}
+
 void test_ArrayUtil_a_and_ArrayUtil_b_are_will_be_equal(){
 	int a [] = {1,02};
 	int b [] = {1,02};
@@ -399,4 +407,17 @@ void test_filter_gives_2_4_for_1_2_3_4_5(){
 	assertEqual(lIst[0],2);
 	assertEqual(lIst[1],4);
 	free(list); 
+}
+
+void test_map_should_map_source_to_destination_using_the_provided_convert_function(){
+	int hint = 1, result[] = {2,3,4,5,6};
+	
+	util = (ArrayUtil){sample, sizeof(int), 5};
+	resultUtil = create(util.typeSize, util.length);
+	expectedUtil = (ArrayUtil){result, sizeof(int), 5};
+
+	map(util, resultUtil, increment, &hint);
+	
+	assert(areEqual(expectedUtil, resultUtil));
+	dispose(resultUtil);
 }

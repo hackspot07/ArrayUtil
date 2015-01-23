@@ -4,6 +4,11 @@ typedef struct arrayUtil{
 	int length;
 }ArrayUtil;
 
+typedef struct Student{
+    int rollno;
+    float age;
+} student;
+
 typedef int MatchFunc (void* hint, void* item);
 typedef void ConvertFunc(void* hint, void* sourceItem, void* destinationItem);
 
