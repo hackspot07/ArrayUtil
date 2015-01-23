@@ -105,7 +105,8 @@ int filter(ArrayUtil array, MatchFunc* match, void* hint, void** destination, in
 
 void map(ArrayUtil source, ArrayUtil destination, ConvertFunc* convert, void* hint){
 	int i;
-	for(i=0;i<source.length*source.typeSize;i++){
-		 convert(hint,&(source.base[i*source.typeSize]),&(destination.base[i*destination.typeSize]));
+	for(i=0;i<source.length*source.typeSize;){
+		 convert(hint,&(source.base[i]),&(destination.base[i]));
+		 i = i + source.typeSize;
 	}
 };

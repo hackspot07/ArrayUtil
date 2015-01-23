@@ -10,6 +10,17 @@ typedef char*  String;
 #include <stdlib.h>
 #include <string.h>
 
+ArrayUtil util, resultUtil, expectedUtil;
+int sample[] = {1,2,3,4,5};
+
+void increment(void* hint, void* sourceItem, void* destinationItem){
+	int *hintPtr = (int*)hint;
+	int *numberPtr = (int*)sourceItem;
+	int *resultPtr = (int*)destinationItem;
+
+	*resultPtr = *numberPtr + *hintPtr;
+}
+
 int isCapital(void *hint, void *item) {
     return((*(char *)item >=65) && (*(char *)item <= 91));
 }
@@ -383,5 +394,148 @@ void test_areEqual_returns_1_if_two_char_array_are_equal(){
 	assertEqual(areEqual(a1,a2),1);
 }
 
+void test_areEqual_returns_0_if_two_char_array_are_not_equal(){
+	char array1[] = {'a','a','c'};
+	char array2[] = {'a','b','c'};
+	ArrayUtil a1 = create(1,3);
+	ArrayUtil a2 = create(1,3);
+	a1.base = array1;
+	a2.base = array2;
+	assertEqual(areEqual(a1,a2),0);
+}
+
+void test_areEqual_returns_1_if_two_float_array_are_equal(){
+	float array1[] = {1.0,0.2,3.4};
+	float array2[] = {1.0,0.2,3.4};
+	ArrayUtil a1 = create(1,3);
+	ArrayUtil a2 = create(1,3);
+	a1.base = array1;
+	a2.base = array2;
+	assertEqual(areEqual(a1,a2),1);
+}
+
+void test_areEqual_returns_0_if_two_float_array_are_not_equal(){
+	float array1[] = {1.0,1.2,3.4};
+	float array2[] = {1.0,0.2,3.4};
+	ArrayUtil a1 = create(1,3);
+	ArrayUtil a2 = create(1,3);
+	a1.base = array1;
+	a2.base = array2;
+	assertEqual(areEqual(a1,a2),1);
+}
+
+void test_create_creates_an_int_array_initializes_with_0(){
+	int typeSize = 4,length = 3;
+	int arrOf0[3] = {0,0,0};
+	ArrayUtil array = create(typeSize,length);
+	ArrayUtil array1;
+    array1.base = arrOf0;
+    array1.typeSize = 4;
+    array1.length = 3;
+	assertEqual(areEqual(array, array1),1);
+}
+
+void test_create_creates_char_array_initializes_with_0(){
+	int typeSize = 1,length = 4;
+	char arrOf0[4] = {0,0,0,0};
+	ArrayUtil array = create(typeSize,length);
+	ArrayUtil array1;
+	array1.base = arrOf0;
+	array1.typeSize = 1;
+	array1.length = 4;
+	assertEqual(areEqual(array, array1),1);
+}
+
+void test_to_create_int_with_array_diffferent_typeSize_initializes_with_0(){
+	int typeSize = 3,length = 4,*result;
+	ArrayUtil array = create(typeSize,length);
+    result=(int*)array.base;
+	assertEqual(*result,0);
+	assertEqual(*(result+1),0);
+	assertEqual(*(result+2),0);
+	assertEqual(array.typeSize,3);
+}	
 
 
+void test_to_change_the_length_of_int_array_to_greater_length(){
+	int newLength = 5,*num;
+	int number[] = {1,2,3,0,0};
+	ArrayUtil a1 = create(SIZEOF_INT,3);
+	ArrayUtil a3;
+	ArrayUtil expected = {number,sizeof(int), 5};
+	num = a1.base;
+	num[0]=1;num[1]=2,num[2]=3;
+	a3 = resize(a1, newLength);
+	assert(areEqual(expected,a3));
+}
+
+void test_to_change_the_length_of_array_to_small_array_length(){
+	int newLength = 3,*num;
+	int number[] = {1,2,3};
+	ArrayUtil a1 = create(SIZEOF_INT,5);
+	ArrayUtil a3;
+	ArrayUtil expected = {number,sizeof(int), 3};
+	num = a1.base;
+	num[0]=1;num[1]=2,num[2]=3,num[3]=4,num[4]=5;
+	a3 = resize(a1, newLength);
+	assert(areEqual(expected,a3));
+}
+
+void test_to_change_the_length_of_char_array_to_grater_length(){
+	int newLength = 5;
+	char *num;
+	char number[] = {'a','b','c',0,0};
+	ArrayUtil a1 = create(sizeof(char),3);
+	ArrayUtil a3;
+	ArrayUtil expected = {number,sizeof(char), 5};
+	num = a1.base;
+	num[0]='a',num[1]='b',num[2]='c';
+	a3 = resize(a1, newLength);
+	assert(areEqual(expected,a3));
+}
+
+void test_to_change_the_length_of_float_array_to_greater_length(){
+	int newLength = 5;
+	float *num;
+	float number[] = {1.0,0.2,3.0,0,0};
+	ArrayUtil a1 = create(sizeof(float),3);
+	ArrayUtil a3;
+	ArrayUtil expected = {number,sizeof(float), 5};
+	num = a1.base;
+	num[0]=1.0;num[1]=0.2,num[2]=3.0;
+	a3 = resize(a1, newLength);
+	assert(areEqual(expected,a3));
+}
+
+void test_create_should_set_the_length_and_typeSize_fields_of_array_to_the_values_passed_to_create_function(){
+	ArrayUtil a = create(1,3);
+	assert(a.length == 3);
+	assert(a.typeSize == 1);
+	dispose(a);
+};
+
+void test_filter_should_filter_those_elements_which_are_matching_given_the_criteria(){
+	ArrayUtil array = create(sizeof(int),5);
+	int arr[] = {1,2,3,4,5},result,i,expected[] = {2,4};
+	void *destination;
+	array.base = arr;
+	result = filter(array, isEven, NULL, &destination, 5);	
+	for (i = 0; i < 2; ++i)
+	{
+		assert(((int*)destination)[i] == expected[i]);
+	}
+	assert(result == 2);
+};
+
+void test_map_should_map_source_to_destination_using_the_provided_convert_function(){
+	int hint = 1, result[] = {2,3,4,5,6};
+	
+	util = (ArrayUtil){sample, sizeof(int), 5};
+	resultUtil = create(util.typeSize, util.length);
+	expectedUtil = (ArrayUtil){result, sizeof(int), 5};
+
+	map(util, resultUtil, increment, &hint);
+	
+	assert(areEqual(expectedUtil, resultUtil));
+	dispose(resultUtil);
+}
