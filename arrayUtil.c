@@ -9,9 +9,10 @@ int areEqual(ArrayUtil util1,ArrayUtil util2){
 	char *b = util2.base; 
 	if(util1.length != util2.length)
 			return 0;
-	for(i=0;i<util1.length*util1.typeSize;i++)
+	for(i=0;i<util1.length*util1.typeSize;i++){ 
 		if(a[i] != b[i])
 			return 0;
+	}
 	return 1;
 };
 
@@ -37,8 +38,10 @@ int findIndex(ArrayUtil array, void* element){
 	char *src = array.base;
 	char *ele = element;
 	int mLength = array.length*array.typeSize;
-	for(index=0;index<mLength;index++){
-		if(src[index]==ele[count])
+	for(index=0;index<mLength;index++){  
+		if(src[index] != ele[count])
+			count = 0;
+		if(src[index]==ele[count]) 
 			count++;
 		if(count==array.typeSize)
 	 		return index/array.typeSize;
@@ -55,18 +58,21 @@ void dispose(ArrayUtil array){
 
 void* findFirst(ArrayUtil array, MatchFunc* match, void* hint){
 	int i;
-	for(i=0;i<array.length*array.typeSize;i++){
+	for(i=0;i<array.length*array.typeSize;){
 		if(match(hint,&(array.base[i])))
 			return &(array.base[i]);
+		i = i + array.typeSize;
 	};
 	return NULL;
 };
 
 void* findLast(ArrayUtil array, MatchFunc* match, void* hint){
 	int i;
-	for(i=array.length*array.typeSize;i>=0;i--){
+	int position = (array.length-1)*array.typeSize;
+	for(i=position;i>=0;){
 		if(match(hint,&(array.base[i])))
 			return &(array.base[i]);
+		i = i - array.typeSize;
 	};
 	return NULL;
 };
@@ -84,12 +90,13 @@ int count(ArrayUtil array, MatchFunc* match, void* hint){
 int filter(ArrayUtil array, MatchFunc* match, void* hint, void** destination, int maxItems ){
 	int i,length=0;
 	*destination = malloc(array.typeSize);
-	for(i=0;i<array.length*array.typeSize;i++){
+	for(i=0;i<array.length*array.typeSize;){
 		if(match(hint,&array.base[i])){
 			memcpy(&((*destination)[length*array.typeSize]),&(array.base[i]),array.typeSize);
 			length++;
 			*destination = realloc(*destination,array.typeSize*length+1);
 		}  
+		i = i + array.typeSize;
 		if(maxItems==length)
 			return maxItems;
 	};
@@ -97,4 +104,8 @@ int filter(ArrayUtil array, MatchFunc* match, void* hint, void** destination, in
 };
 
 void map(ArrayUtil source, ArrayUtil destination, ConvertFunc* convert, void* hint){
+	int i;
+	for(i=0;i<source.length*source.typeSize;i++){
+		 convert(hint,&(source.base[i*source.typeSize]),&(destination.base[i*destination.typeSize]));
+	}
 };

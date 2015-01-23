@@ -1,16 +1,17 @@
 #define String char*
 #include "expr_assert.h"
 #include "arrayUtil.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 void test_ArrayUtil_a_and_ArrayUtil_b_are_will_be_equal(){
-	int a [] = {1,2};
-	int b [] = {1,2};
+	int a [] = {1,02};
+	int b [] = {1,02};
 	ArrayUtil array1 = {a, sizeof(int), 2};
 	ArrayUtil array2 = {b, sizeof(int), 2};
 	
-	assertEqual(areEqual(array1,array2),1);
+	assert(areEqual(array1,array2));
 };
 
 void test_ArrayUtil_a_and_ArrayUtil_b_are_not_equal(){
@@ -30,7 +31,7 @@ void test_ArrayUtil_a_and_ArrayUtil_b_are_will_be_equal_by_each_element(){
 	ArrayUtil array1 = {a, sizeof(char), 2};
 	ArrayUtil array2 = {b, sizeof(char), 2};
 
-	assertEqual(areEqual(array1,array2),1);
+	assert(areEqual(array1,array2));
 };
 
 void test_ArrayUtil_a_and_ArrayUtil_b_are_will_be_equal_by_each_element_typeof_string(){
@@ -39,7 +40,7 @@ void test_ArrayUtil_a_and_ArrayUtil_b_are_will_be_equal_by_each_element_typeof_s
 	ArrayUtil array1 = {a, sizeof(String), 1};
 	ArrayUtil array2 = {b, sizeof(String), 1};
 
-	assertEqual(areEqual(array1,array2),1);
+	assert(areEqual(array1,array2));
 };
 
 void test_ArrayUtil_a_and_ArrayUtil_b_are_will_not_be_equal_String(){
@@ -57,7 +58,7 @@ void test_ArrayUtil_a_and_ArrayUtil_b_are_will_be_equal_by_each_element_typeof_d
 	ArrayUtil array1 = {a, sizeof(double), 1};
 	ArrayUtil array2 = {b, sizeof(double), 1};
 
-	assertEqual(areEqual(array1,array2),1);
+	assert(areEqual(array1,array2));
 };
 
 void test_It_return_the_array_have_length_2(){
@@ -180,7 +181,7 @@ void test_findFirst_will_return_NULL(){
 	ArrayUtil array = {a, sizeof(int), 6};
 	result = findFirst(array,isEqual,&hint);
 
-	assertEqual((int)(result),(int)NULL);
+	assertEqual((int)result,(int)NULL);
 };
 
 int compare(void *hint,void* item){
@@ -336,22 +337,66 @@ void test_filter_will_return_the_array_string_contain_hello(){
 	((char**)array.base)[1]="gello";
 	length = filter(array,stringCompare,&hint,&result,2);
 	expected = ((String*)result)[0];
+	
 	assertEqual(length,1);
-
 	assertEqual(strcmp(expected,"hello"),0);
 };
 
 
 
 
-// void multiplyBy2(void* hint, void* sourceItem, void* destinationItem){
+void multiplyBy2(void* hint, void* sourceItem, void* destinationItem){
+	*(int*)destinationItem = *(int*)sourceItem*2;
+};
 
-// };
+void test_map_will_return_after_multiplyby_2_in_each_element(){
+	int hint = 3;
+	ArrayUtil source = create(sizeof(int),2);
+	ArrayUtil expected = create(sizeof(int),2);
+	ArrayUtil destination = create(sizeof(int), 2);
+	((int*)source.base)[0] = -10200004;
+	((int*)source.base)[1] = 11700;
+	((int*)expected.base)[0] = -20400008;
+	((int*)expected.base)[1] = 23400;
+	map(source,destination,multiplyBy2,&hint);
 
-// void test_map_will_return_after_multiplyby_2_in_each_element(){
-// 	int a[]={1,8,8,7,8,9},hint=3,actual[] = {2,16,16,14,16,18},expected;
-// 	ArrayUtil src = {a, sizeof(int), 6},result; 
-// 	map(src,result,multiplyBy2,&hint);
-// 	expected = ((int[])result.base);
-// 	assert(areEqual(expected,actual));
-// };
+	assert(areEqual(destination,expected));
+	free(destination.base);
+};
+
+void test_map_will_return_array_of_elements_multiplyby_2(){
+	int hint = 3;
+	ArrayUtil source = create(sizeof(int),2);
+	ArrayUtil expected = create(sizeof(int),2);
+	ArrayUtil destination = create(sizeof(int), 2);
+	((int*)source.base)[0] = 117;
+	((int*)source.base)[1] = -117;
+	((int*)expected.base)[0] = 234;
+	((int*)expected.base)[1] = -234;
+	map(source,destination,multiplyBy2,&hint);
+
+	assert(areEqual(destination,expected));
+	free(destination.base);
+};
+
+
+int isDivisible(void* a,void *b){
+	return (*((int*)b)%*((int*)a) == 0) ? 1 : 0;
+}
+
+
+void test_filter_gives_2_4_for_1_2_3_4_5(){
+	ArrayUtil util = create(sizeof(int),5);
+	int *arr,i,result,hint = 2,*lIst;
+	void* list;
+	arr = (int*)util.base;
+	for(i=0;i<5;i++){
+		arr[i] = i+1;
+	}
+	result = filter(util, isDivisible,&hint,&list,2);
+	lIst = (int*)list;
+	assertEqual(result,2);
+	assertEqual(lIst[0],2);
+	assertEqual(lIst[1],4);
+	free(list); 
+}
