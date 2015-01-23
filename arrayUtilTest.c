@@ -13,6 +13,10 @@ void increment(void* hint, void* sourceItem, void* destinationItem){
 	*(int*)destinationItem = *(int*)hint + *(int*)sourceItem;
 }
 
+void charConvertFunc(void* hint, void* sourceItem, void* destinationItem){
+	*((char*)destinationItem) = *((char*)sourceItem) - 32;
+}
+
 void test_ArrayUtil_a_and_ArrayUtil_b_are_will_be_equal(){
 	int a [] = {1,02};
 	int b [] = {1,02};
@@ -420,4 +424,13 @@ void test_map_should_map_source_to_destination_using_the_provided_convert_functi
 	
 	assert(areEqual(expectedUtil, resultUtil));
 	dispose(resultUtil);
+};
+
+void test_map_gives_A_B_C_D_E_for_a_b_c_d_e_for_character_array(){
+	ArrayUtil src = {(char[]){'a','b','c','d','e'},sizeof(char),5},dest = create(sizeof(char),5);
+	ArrayUtil tmp = {(char[]){'A','B','C','D','E'},sizeof(char),5};
+	char hint = 32;
+	map(src,dest,charConvertFunc,&hint);
+	assertEqual(areEqual(dest,tmp),1);
+	dispose(dest);
 }
