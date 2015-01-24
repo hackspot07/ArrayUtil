@@ -497,7 +497,7 @@ void test_forEach_gives_minus_1_0_1_for_0_1_2_(){
 	assertEqual(((float*)array.base)[0],-1);
 	assertEqual(((float*)array.base)[1],0);
 	assertEqual(((float*)array.base)[2],1.0);
-
+	dispose(array);
 };
 
 void printCharAddby1(void* hint,void* item){
@@ -516,5 +516,36 @@ void test_forEach_gives_a_b_c_for_a_b_c(){
 	assertEqual(((char*)array.base)[0],98);
 	assertEqual(((char*)array.base)[1],99);
 	assertEqual(((char*)array.base)[2],100);
-
+	dispose(array);
 };
+
+void* add(void* hint, void* previousItem, void* item){
+	 *(int*)previousItem = (*(int*)previousItem + *(int*)item) * *(int*)hint;
+	 return previousItem;
+};
+
+void test_reduce_returns_sum_with_multiply_ech_time_in_elements_4(){
+	int hint = 2,initial_value = 0,*result;
+	int array[] = {0,0,0,1,0};
+	ArrayUtil util = create(sizeof(int),5);
+	util.base = array;
+	result = reduce(util,add,&hint,&initial_value);
+	assertEqual((int)initial_value,4);
+};
+
+void* sum(void* hint, void* previousItem, void* item){
+	 *(int*)previousItem = (*(int*)previousItem + *(int*)item);
+	 return previousItem;
+};
+
+void test_reduce_returns_sum_of_all_integers_of_array (){
+	int hint = 2,result;
+	int initial_value = 0;
+	int array[] = {1,2,3};
+	void* (*fn_ptr)(void*,void*,void*) = &sum;
+	ArrayUtil util = create(sizeof(int),3);
+	util.base = (void*)array;
+	result = *(int*)reduce(util,fn_ptr,(void*)&hint,(void*)&initial_value);
+	
+	assertEqual(result,6);
+}

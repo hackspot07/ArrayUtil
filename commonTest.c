@@ -1003,4 +1003,34 @@ void test_findFirst_returns_the_first_student_who_has_passed_the_exam_struct_arr
 }
 //Budhha End
 
+void test_reduce_returns_sum_of_all_integers_of_array (){
+	int hint = 2,result;
+	int initial_value = 0;
+	int array[] = {1,2,3};
+	void* (*fn_ptr)(void*,void*,void*) = &sum;
+	ArrayUtil util = create(sizeof(int),3);
+	util.base = (void*)array;
+	result = *(int*)reduce(util,fn_ptr,(void*)&hint,(void*)&initial_value);
+	assertEqual(result,6);
+};
+void *add_all(void* hint, void* previousItem, void* item){
+	*((int*)item)= *((int*)previousItem) + *((int*)item);
+	return ((int*)item);
+};
+void test_reduce_gives_15_when_elements_are_1_2_3_4_5_and_initial_value_is_0(){
+	void *hint;
+	int intialValue=0;
+	int array[]={1,2,3,4,5};
+	ArrayUtil util={array,INT_SIZE,5};
+	void *return_value = reduce(util,add_all,&hint,&intialValue);
+	assertEqual(*((int*)return_value),15);
+}
 
+void test_reduce_gives_30_when_elements_are_1_2_3_4_5_and_initial_value_is_15(){
+	void *hint;
+	int intialValue=15;
+	int array[]={1,2,3,4,5};
+	ArrayUtil util={array,INT_SIZE,5};
+	void *return_value=reduce(util,add_all,&hint,&intialValue);
+	assertEqual(*((int*)return_value),30);
+}

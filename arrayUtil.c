@@ -118,3 +118,12 @@ void forEach(ArrayUtil util, OperationFunc* match, void* hint){
 		i = i + util.typeSize;
 	};
 };
+
+void* reduce(ArrayUtil util, ReducerFunc* reducer, void* hint, void* intialValue){
+	int i;
+	for(i=0;i<util.typeSize*util.length;){
+		intialValue = reducer(hint,intialValue,&util.base[i]);
+		i = i + util.typeSize;
+	}
+	return intialValue;
+}
