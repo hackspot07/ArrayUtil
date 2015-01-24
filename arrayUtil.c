@@ -26,7 +26,7 @@ ArrayUtil resize(ArrayUtil array,int length){
 	int i,copyLength;
 	void *newArray;
 	copyLength = (length<=array.length?length:array.length)*array.typeSize;
-	newArray = calloc(length,length*array.typeSize); 
+	newArray = calloc(length,array.typeSize); 
 	memcpy(newArray,array.base,copyLength);
 	array.base = newArray;
 	array.length = length;
@@ -109,4 +109,12 @@ void map(ArrayUtil source, ArrayUtil destination, ConvertFunc* convert, void* hi
 		 convert(hint,&(source.base[i]),&(destination.base[i]));
 		 i = i + source.typeSize;
 	}
+};
+
+void forEach(ArrayUtil util, OperationFunc* match, void* hint){
+	int i;
+	for(i=0;i<util.length*util.typeSize;){
+		match(hint,&util.base[i]);
+		i = i + util.typeSize;
+	};
 };

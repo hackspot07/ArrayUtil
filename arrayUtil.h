@@ -11,6 +11,7 @@ typedef struct Student{
 
 typedef int MatchFunc (void* hint, void* item);
 typedef void ConvertFunc(void* hint, void* sourceItem, void* destinationItem);
+typedef void OperationFunc(void* hint, void* item);
 
 int areEqual(ArrayUtil util1,ArrayUtil util2); 
 ArrayUtil create(int typeSize, int length);
@@ -22,3 +23,4 @@ void* findLast(ArrayUtil util, MatchFunc* match, void* hint);
 int count(ArrayUtil util, MatchFunc* match, void* hint);
 int filter(ArrayUtil util, MatchFunc* match, void* hint, void** destination, int maxItems);
 void map(ArrayUtil source, ArrayUtil destination, ConvertFunc* convert, void* hint);
+void forEach(ArrayUtil util, OperationFunc* operation, void* hint);

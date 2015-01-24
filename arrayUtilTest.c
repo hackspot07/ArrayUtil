@@ -465,3 +465,56 @@ void test_map_gives_A_B_C_D_E_for_a_b_c_d_e_for_character_array(){
 	assertEqual(areEqual(dest,tmp),1);
 	dispose(dest);
 }
+
+void minusBy1(void* hint,void* element){
+	  *(int*)element = *(int*)element - *(int*)hint;
+};
+void minusBy1Float(void* hint,void* element){
+	  *(float*)element = *(float*)element - *(float*)hint;
+};
+void test_forEach_gives_minus_1_0_1_2_3_for_0_1_2_3_4(){
+	ArrayUtil array = create(sizeof(int),5);
+	int i,*elements,hint=1;
+	for(i=0;i<5;i++){((int*)array.base)[i] = i;};
+	elements = ((int*)array.base);
+
+	forEach(array,minusBy1,&hint);
+	assertEqual(elements[0],-1);
+	assertEqual(elements[1],0);
+	assertEqual(elements[4],3);
+	dispose(array);
+};
+
+void test_forEach_gives_minus_1_0_1_for_0_1_2_(){
+	ArrayUtil array = create(sizeof(float),3);
+	float *elements,hint=1;
+	int i;
+	for(i=0;i<3;i++){((float*)array.base)[i] = i;};
+	elements = ((float*)array.base);
+
+	forEach(array,minusBy1Float,&hint);
+
+	assertEqual(((float*)array.base)[0],-1);
+	assertEqual(((float*)array.base)[1],0);
+	assertEqual(((float*)array.base)[2],1.0);
+
+};
+
+void printCharAddby1(void* hint,void* item){
+	*(char*)item = *(char*)item + *(char*)hint;
+};
+
+void test_forEach_gives_a_b_c_for_a_b_c(){
+	ArrayUtil array = create(sizeof(char),3);
+	char *elements,hint=1;
+	int i;
+	for(i=0;i<5;i++){((char*)array.base)[i] = 'a'+i;};
+	elements = ((char*)array.base);
+
+	forEach(array,printCharAddby1,&hint);
+
+	assertEqual(((char*)array.base)[0],98);
+	assertEqual(((char*)array.base)[1],99);
+	assertEqual(((char*)array.base)[2],100);
+
+};
